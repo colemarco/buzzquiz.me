@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Color Scheme - Adjust these to your preference */
+  --primary: #6366f1;       /* Indigo/purple for main accent */
+  --primary-dark: #4f46e5;  /* Darker shade of primary */
+  --primary-light: #a5b4fc; /* Lighter shade of primary */
+  
+  --secondary: #ec4899;     /* Pink for secondary accents */
+  --secondary-dark: #db2777;
+  --secondary-light: #f9a8d4;
+  
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+  
+  --background: #ffffff;
+  --foreground: var(--neutral-900);
+  
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  
+  /* Font Settings */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Poppins', var(--font-sans);
+  --font-mono: 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+}
+
+/* Dark mode colors - will be applied when .dark class is present */
+.dark {
+  --background: var(--neutral-900);
+  --foreground: var(--neutral-100);
+  /* Adjust other colors as needed for dark mode */
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold;
+  }
+  
+  /* Add more base styles as needed */
+}
+
+@layer components {
+  .container-padding {
+    @apply px-2 sm:px-4;
+  }
+  
+  .quiz-container {
+    @apply max-w-5xl mx-auto py-6;
+  }
+  
+  /* Add more component classes as needed */
+}
+
+/* Add any other global styles here */
