@@ -10,13 +10,11 @@ import QuizQuestion from "./QuizQuestion";
  * @param {Array} props.questions - Array of question objects
  * @param {function} props.onSubmit - Function to call when all questions are answered
  * @param {boolean} props.isLoading - Whether the form is currently submitting
- * @param {Object} props.quizData - Quiz topic and basis
  */
 const QuizQuestionsContainer = ({
     questions,
     onSubmit,
     isLoading = false,
-    quizData,
 }) => {
     const [answers, setAnswers] = useState({});
 

@@ -18,7 +18,7 @@ const QuizForm = ({
 }) => {
     const [quizTopic, setQuizTopic] = useState("");
     const [quizBasis, setQuizBasis] = useState("");
-    const [isValid, setIsValid] = useState(false);
+    const [_, setIsValid] = useState(false);
 
     // Update state when initialValues change, but only if explicitly provided
     useEffect(() => {

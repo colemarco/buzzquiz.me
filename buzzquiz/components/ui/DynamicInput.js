@@ -11,7 +11,6 @@ import { useRef, useState, useEffect } from "react";
  * @param {string} props.placeholder - Placeholder text
  * @param {string} props.className - Additional CSS classes
  * @param {string} props.minWidth - Minimum width of the input
- * @param {number} props.minLength - Minimum character length
  * @param {number} props.maxLength - Maximum character length
  * @param {Object} props.inputProps - Additional props to pass to the input element
  */
@@ -21,7 +20,6 @@ const DynamicInput = ({
     placeholder = "",
     className = "",
     minWidth = "120px",
-    minLength = 3,
     maxLength = 100,
     inputProps = {},
 }) => {
