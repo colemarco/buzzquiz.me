@@ -18,17 +18,12 @@ const QuizForm = ({
 }) => {
     const [quizTopic, setQuizTopic] = useState("");
     const [quizBasis, setQuizBasis] = useState("");
-    const [_, setIsValid] = useState(false);
 
     // Update state when initialValues change, but only if explicitly provided
     useEffect(() => {
         if (initialValues) {
             setQuizTopic(initialValues.quizTopic || "");
             setQuizBasis(initialValues.quizBasis || "");
-            validateForm(
-                initialValues.quizTopic || "",
-                initialValues.quizBasis || ""
-            );
         }
     }, [initialValues]);
 
@@ -45,15 +40,9 @@ const QuizForm = ({
         validateAndNotify(quizTopic, newBasis);
     };
 
-    // Validate that both inputs have content
-    const validateForm = (topic, basis) => {
-        setIsValid(topic.trim().length > 0 && basis.trim().length > 0);
-    };
-
     // Validate and notify parent component
     const validateAndNotify = (topic, basis) => {
         const valid = topic.trim().length > 0 && basis.trim().length > 0;
-        setIsValid(valid);
 
         if (onChange) {
             onChange({

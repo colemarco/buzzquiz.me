@@ -25,7 +25,9 @@ const QuizQuestion = ({
 
     const handleSelectOption = (optionId) => {
         if (disabled) return;
-        onAnswer && onAnswer(question_id, optionId);
+        if (onAnswer) {
+            onAnswer(question_id, optionId);
+        }
     };
 
     return (
