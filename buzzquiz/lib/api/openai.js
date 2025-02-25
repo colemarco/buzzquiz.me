@@ -142,7 +142,7 @@ export async function generateQuizQuestions(quizData) {
                 {"option_id": "D", "option_text": "Option text"}
               ]
             }
-            // Questions 2-5 follow the same structure
+            // Questions 2-N follow the same structure
           ]
         }
         
@@ -153,7 +153,7 @@ export async function generateQuizQuestions(quizData) {
             content: `Quiz Topic: "${quizTopic}"
         Quiz Basis: "${quizBasis}"
         
-        Generate a fun personality quiz with 5 multiple-choice questions.`,
+        Generate a fun personality quiz with 5-9 multiple-choice questions.`,
         },
     ];
 

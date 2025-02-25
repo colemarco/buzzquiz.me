@@ -4,8 +4,8 @@
 
 :root {
   /* Color Scheme - Adjust these to your preference */
-  --primary: #6366f1;       /* Indigo/purple for main accent */
-  --primary-dark: #4f46e5;  /* Darker shade of primary */
+  --primary: #9424a8;       /* Indigo/purple for main accent */
+  --primary-dark: rgb(129, 31, 106);  /* Darker shade of primary */
   --primary-light: #a5b4fc; /* Lighter shade of primary */
   
   --secondary: #ec4899;     /* Pink for secondary accents */

@@ -5,6 +5,7 @@ import QuizForm from "@/components/ui/QuizForm";
 import QuizSubmitButton from "@/components/ui/QuizSubmitButton";
 import QuizQuestionsContainer from "@/components/ui/QuizQuestionsContainer";
 import QuizResult from "@/components/ui/QuizResult";
+import AnimatedHeader from "@/components/layout/Header";
 
 export default function Home() {
     const [quizData, setQuizData] = useState({
@@ -53,34 +54,34 @@ export default function Home() {
 
         try {
             // Bypass validation for now to debug
-            /*
-      const response = await fetch('/api/validate-quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quizTopic: quizData.quizTopic,
-          quizBasis: quizData.quizBasis
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to validate quiz');
-      }
-      
-      const data = await response.json();
-      console.log('Validation response:', data);
-      
-      if (data.isValid) {
-        // Quiz is valid, proceed to generating questions directly
-        generateQuizQuestions();
-      } else {
-        // Quiz is not valid, show error
-        setValidationError('Your quiz prompt doesn\'t seem valid. Please try something more specific or meaningful.');
-        setIsLoading(false);
-      }
-      */
+            const response = await fetch("/api/validate-quiz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    quizTopic: quizData.quizTopic,
+                    quizBasis: quizData.quizBasis,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to validate quiz");
+            }
+
+            const data = await response.json();
+            console.log("Validation response:", data);
+
+            if (data.isValid) {
+                // Quiz is valid, proceed to generating questions directly
+                generateQuizQuestions();
+            } else {
+                // Quiz is not valid, show error
+                setValidationError(
+                    "Your quiz prompt doesn't seem valid. Please try something more specific or meaningful."
+                );
+                setIsLoading(false);
+            }
 
             // Temporarily skip validation and proceed directly to question generation
             generateQuizQuestions();
@@ -180,7 +181,7 @@ export default function Home() {
         <main className="container mx-auto px-4 py-8">
             <div className="quiz-container text-center">
                 {/* Header/Logo will go here */}
-                <h1 className="text-4xl font-bold mb-4">BuzzQuiz</h1>
+                <AnimatedHeader />
 
                 {/* Always show the form sentence with key to force re-render on reset */}
                 <QuizForm
