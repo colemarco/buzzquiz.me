@@ -128,7 +128,7 @@ export default function Home() {
     };
 
     // Handle quiz answers submission
-    const handleAnswersSubmit = async (userResponses: any) => {
+    const handleAnswersSubmit = async (userResponses: object) => {
         setResultLoading(true);
 
         try {

@@ -125,7 +125,7 @@ export async function generateQuizQuestions(quizData) {
         {
             role: "system",
             content: `You are a quiz generation assistant. Create a fun BuzzFeed-style quiz based on the given topic and basis.
-        Generate at least 5 multiple-choice questions that will help determine what ${quizTopic} the user is.
+        Generate between 5 and 9 multiple-choice questions that will help determine what ${quizTopic} the user is. The questions must all be related in some way to the basis.
         
         Return ONLY a valid JSON object with the following structure:
         
@@ -198,7 +198,7 @@ export async function processQuizResults(quizData, userResponses) {
         Return ONLY a valid JSON object with the following structure:
         
         {
-          "result": "The specific ${quizTopic} name/type. If the use was asking what type of tree they'd be, your result would be some type of tree.",
+          "result": "The specific ${quizTopic} name/type. If the user was asking what type of candy they'd be, your result would be some type of candy.",
           "explanation": "A witty explanation with reasoning, hopefully well-thought out crafted to relate their answers to the answer. Do not directly respond to every answer, but create a narrative that matches the vibe of their answers. A short paragrah with an excited tone.",
         }
         
@@ -218,7 +218,7 @@ export async function processQuizResults(quizData, userResponses) {
 
     try {
         const response = await callOpenAI(messages, {
-            temperature: 0.8, // Higher temperature for more creative results
+            temperature: 0.9, // Higher temperature for more creative results
             max_tokens: 800,
         });
 
