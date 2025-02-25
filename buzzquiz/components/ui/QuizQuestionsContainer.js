@@ -18,6 +18,8 @@ const QuizQuestionsContainer = ({
 }) => {
     const [answers, setAnswers] = useState({});
 
+    questions = questions.questions
+
     if (!questions || questions.length === 0) return null;
 
     const handleAnswer = (questionId, optionId) => {

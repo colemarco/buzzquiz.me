@@ -10,7 +10,7 @@ import { useState } from "react";
  * @param {boolean} props.isValid - Whether form inputs are valid for submission
  * @param {function} props.onSubmit - Function to call when button is clicked
  * @param {boolean} props.isLoading - Whether a request is currently in progress
- * @param {string} props.className - Additional CSS classes
+ * @optional {string} props.className - Additional CSS classes
  */
 const QuizSubmitButton = ({
     isValid = false,

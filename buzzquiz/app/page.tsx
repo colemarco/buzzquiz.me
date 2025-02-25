@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import QuizForm from "@/components/ui/QuizForm";
 import QuizSubmitButton from "@/components/ui/QuizSubmitButton";
 import QuizQuestionsContainer from "@/components/ui/QuizQuestionsContainer";
@@ -20,7 +20,13 @@ export default function Home() {
     const [resetCounter, setResetCounter] = useState(0);
 
     // Handle form input changes
-    const handleFormChange = (data) => {
+    const handleFormChange = (
+        data: SetStateAction<{
+            quizTopic: string;
+            quizBasis: string;
+            isValid: boolean;
+        }>
+    ) => {
         console.log("Form data changed:", data);
         setQuizData(data);
 
@@ -122,7 +128,7 @@ export default function Home() {
     };
 
     // Handle quiz answers submission
-    const handleAnswersSubmit = async (userResponses) => {
+    const handleAnswersSubmit = async (userResponses: any) => {
         setResultLoading(true);
 
         try {
@@ -204,10 +210,10 @@ export default function Home() {
                 {/* Quiz Questions - only show if we have questions and no result yet */}
                 {quizQuestions && !quizResult && (
                     <QuizQuestionsContainer
-                        questions={quizQuestions.questions}
+                        questions={quizQuestions}
                         onSubmit={handleAnswersSubmit}
                         isLoading={resultLoading}
-                        quizData={quizData}
+                        // quizData={quizData}
                     />
                 )}
 

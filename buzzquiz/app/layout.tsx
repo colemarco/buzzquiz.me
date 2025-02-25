@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
+import { ReactNode } from "react";
 
 // Load fonts
 const inter = Inter({
@@ -18,7 +19,7 @@ export const metadata = {
     description: "Generate fun, personalized quizzes about anything",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
             <body className={`${inter.variable} ${poppins.variable}`}>

@@ -9,7 +9,7 @@ import DynamicInput from "./DynamicInput";
  * @param {Object} props
  * @param {function} props.onChange - Function called when inputs change
  * @param {boolean} props.isLoading - Whether a request is currently in progress
- * @param {Object} props.initialValues - Initial values for the inputs
+ * @optional {Object} props.initialValues - Initial values for the inputs
  */
 const QuizForm = ({
     onChange,
