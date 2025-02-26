@@ -180,7 +180,7 @@ const DynamicInput = ({
 
                     setInputWidth(`${targetWidth}px`);
 
-                    timeoutRef.current = setTimeout(animate, 60);
+                    timeoutRef.current = setTimeout(animate, 20);
                 } else {
                     // Transition to typing phase
                     phase = "typing";
@@ -192,7 +192,7 @@ const DynamicInput = ({
                         `${Math.max(minWidthPx.current, widthToMaintain)}px`
                     );
 
-                    timeoutRef.current = setTimeout(animate, 300);
+                    timeoutRef.current = setTimeout(animate, 200);
                 }
             }
             // Typing phase
@@ -214,7 +214,7 @@ const DynamicInput = ({
                         );
                     }
 
-                    timeoutRef.current = setTimeout(animate, 70);
+                    timeoutRef.current = setTimeout(animate, 35);
                 } else {
                     // Animation finished
                     timeoutRef.current = setTimeout(() => {
@@ -240,32 +240,48 @@ const DynamicInput = ({
     // Update width when content changes outside of animation
     useEffect(() => {
         if (!isAnimating) {
-            const contentWidth = measureTextWidth(value || activePlaceholder);
-            setInputWidth(
-                `${Math.max(
-                    measureTextWidth(activePlaceholder),
-                    contentWidth
-                )}px`
-            );
+            // For non-animation states, ensure we're using complete placeholders
+            const textToMeasure = value || activePlaceholder;
+            const contentWidth = measureTextWidth(textToMeasure);
+
+            // Safety check - if we have a placeholder that seems incomplete
+            // (during interruption), use the complete one
+            if (
+                !value &&
+                activePlaceholder.length <
+                    placeholderOptions[currentIndexRef.current].length
+            ) {
+                const completeText =
+                    placeholderOptions[currentIndexRef.current];
+                setActivePlaceholder(completeText);
+                setInputWidth(
+                    `${Math.max(
+                        minWidthPx.current,
+                        measureTextWidth(completeText)
+                    )}px`
+                );
+            } else {
+                setInputWidth(
+                    `${Math.max(
+                        measureTextWidth(activePlaceholder),
+                        contentWidth
+                    )}px`
+                );
+            }
         }
     }, [value, activePlaceholder, isAnimating]);
 
     // Handle focus events
-    const handleFocus = (e) => {
-        setHasFocus(true);
-        setShowCursor(false);
-        clearAllTimeouts();
-
-        if (inputProps.onFocus) {
-            inputProps.onFocus(e);
-        }
-    };
-
     const handleBlur = (e) => {
         setHasFocus(false);
 
-        // Restart animation cycle if input is empty
-        if (!value && !isAnimating) {
+        // If user has entered text, resize to just the content width
+        if (value) {
+            const contentWidth = measureTextWidth(value);
+            setInputWidth(`${Math.max(minWidthPx.current, contentWidth)}px`);
+        }
+        // Otherwise restart animation cycle if input is empty
+        else if (!isAnimating) {
             timeoutRef.current = setTimeout(
                 startAnimationCycle,
                 getRandomDelay()
@@ -274,6 +290,39 @@ const DynamicInput = ({
 
         if (inputProps.onBlur) {
             inputProps.onBlur(e);
+        }
+    };
+
+    // Then modify the handleFocus function to expand back to max width if needed
+    const handleFocus = (e) => {
+        setHasFocus(true);
+        setShowCursor(false);
+        clearAllTimeouts();
+
+        // Reset animation state if it was interrupted
+        if (isAnimating) {
+            setIsAnimating(false);
+
+            // Reset to a complete placeholder rather than partial text
+            const completeText = placeholderOptions[currentIndexRef.current];
+            setActivePlaceholder(completeText);
+        }
+
+        // When focusing, re-expand to accommodate placeholder if needed
+        if (value) {
+            const contentWidth = measureTextWidth(value);
+            const placeholderWidth = measureTextWidth(activePlaceholder);
+            setInputWidth(`${Math.max(contentWidth, placeholderWidth)}px`);
+        } else {
+            // For empty input, ensure width accommodates the full placeholder
+            const placeholderWidth = measureTextWidth(activePlaceholder);
+            setInputWidth(
+                `${Math.max(minWidthPx.current, placeholderWidth)}px`
+            );
+        }
+
+        if (inputProps.onFocus) {
+            inputProps.onFocus(e);
         }
     };
 

@@ -64,7 +64,7 @@ const AnimatedHeader = ({
             // Base animation rotation angles
             const baseRotateX = Math.abs(Math.sin(progress * Math.PI * 2)) * 5;
             const baseRotateY = Math.sin(progress * Math.PI * 2) * 3;
-            const baseRotateZ = Math.sin(progress * Math.PI * 2 * 0.5);
+            const baseRotateZ = Math.sin(progress * Math.PI * 2 * 0.5) - 0.5;
 
             // Calculate cursor repulsion effect
             // When cursor is at center (0.5, 0.5), no additional tilt

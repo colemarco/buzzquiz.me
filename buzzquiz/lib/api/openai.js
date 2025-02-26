@@ -74,33 +74,33 @@ export async function validateQuizPrompt(quizData) {
     const messages = [
         {
             role: "system",
-            content: `You are a quiz validation assistant. Your job is to determine if a quiz topic and basis make sense 
-        and could be used to generate a meaningful BuzzFeed-style personality quiz. Respond with ONLY 'true' or 'false'.
+            content: `You are a quiz validation assistant. Your job is to determine if a quiz topic and basis could at all make sense 
+        and could be used to generate a BuzzFeed-style personality quiz. Most answers should be yes, even if there is no way the basis could predict the topic.
+        You are only looking to eliminate entirely nonsensical requests. Respond with ONLY 'true' or 'false'.
         
         Examples of valid quiz prompts:
         - "I want to know what type of tree I am based on my favorite rom com tropes" (true)
         - "I want to know what Greek dish I am based on my travel preferences" (true)
-        - "I want to know what 90s song I am based on my morning routine" (true)
+        - "I want to know what 90s song I am based on my morning routine" (true even though these have no bearing on each other)
         
         Examples of invalid quiz prompts:
-        - "asdfjkl based on qwerty" (false)
+        - "I want to know asdfjkl based on qwerty" (false)
         - "I want to know what fgdfsgs I am based on my tyiophj" (false)
-        - nonsensical or extremely offensive prompts (false)
+        - "I want to know what red orange apple monkey based on candy witch" (false becasue it's nonsensical)
         
         Only respond with the word 'true' or 'false' - no other text.`,
         },
         {
             role: "user",
-            content: `Quiz Topic: "${quizTopic}"
-        Quiz Basis: "${quizBasis}"
+            content: `I want to know ${quizTopic} based on ${quizBasis}
         
-        Is this a valid quiz prompt that could generate a meaningful personality quiz? Answer only 'true' or 'false'.`,
+        Is this a valid quiz prompt that could generate a quiz? The ideas do not need to be related, they just need to be an actual topic and basis and not random gibberish. Most prompts should be true. Answer only 'true' or 'false'.`,
         },
     ];
 
     try {
         const response = await callOpenAI(messages, {
-            temperature: 0.3, // Lower temperature for more consistent responses
+            temperature: 0.2, // Lower temperature for more consistent responses
             max_tokens: 10, // We only need a short response
         });
 
@@ -124,8 +124,8 @@ export async function generateQuizQuestions(quizData) {
     const messages = [
         {
             role: "system",
-            content: `You are a quiz generation assistant. Create a fun BuzzFeed-style quiz based on the given topic and basis.
-        Generate between 5 and 9 multiple-choice questions that will help determine what ${quizTopic} the user is. The questions must all be related in some way to the basis.
+            content: `You are a quiz generation assistant. Create a witty and niche BuzzFeed-style quiz based on the given topic and basis.
+        Generate between 9 and 15 multiple-choice questions that will help determine what ${quizTopic} the user is. The questions must all be related in some way to the basis.
         
         Return ONLY a valid JSON object with the following structure:
         
@@ -153,14 +153,15 @@ export async function generateQuizQuestions(quizData) {
             content: `Quiz Topic: "${quizTopic}"
         Quiz Basis: "${quizBasis}"
         
-        Generate a fun personality quiz with 5-9 multiple-choice questions.`,
+        Generate a witty and niche personality quiz with 9 and 15 multiple-choice questions based on the quiz basis. Do not make the questions too basic. 
+        Ensure you return it in the specified JSON format and don't include any additional text or information.`,
         },
     ];
 
     try {
         const response = await callOpenAI(messages, {
-            temperature: 0.7,
-            max_tokens: 1000,
+            temperature: 0.9,
+            max_tokens: 1400,
         });
 
         const contentText = response.choices[0].message.content.trim();
@@ -193,7 +194,7 @@ export async function processQuizResults(quizData, userResponses) {
         {
             role: "system",
             content: `You are a quiz result generator. Based on the user's responses to a "${quizTopic}" quiz related to "${quizBasis}", 
-        determine what ${quizTopic} they are.
+        determine what ${quizTopic} they are. Try to make it somewhat niche but still known, avoid the most basic examples.
         
         Return ONLY a valid JSON object with the following structure:
         
@@ -218,7 +219,7 @@ export async function processQuizResults(quizData, userResponses) {
 
     try {
         const response = await callOpenAI(messages, {
-            temperature: 0.9, // Higher temperature for more creative results
+            temperature: 1.2, // Higher temperature for more creative results
             max_tokens: 800,
         });
 

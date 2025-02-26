@@ -82,9 +82,6 @@ export default function Home() {
                 );
                 setIsLoading(false);
             }
-
-            // Temporarily skip validation and proceed directly to question generation
-            generateQuizQuestions();
         } catch (error) {
             console.error("Error during quiz validation:", error);
             setValidationError("An error occurred. Please try again.");
@@ -93,36 +90,84 @@ export default function Home() {
     };
 
     // Generate quiz questions
-    const generateQuizQuestions = async () => {
-        try {
-            console.log("Generating questions with:", {
-                quizTopic: quizData.quizTopic,
-                quizBasis: quizData.quizBasis,
-            });
+    const generateQuizQuestions = async (maxRetries = 3, retryDelay = 1000) => {
+        let retryCount = 0;
 
-            const response = await fetch("/api/generate-quiz", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    quizTopic: quizData.quizTopic,
-                    quizBasis: quizData.quizBasis,
-                }),
-            });
+        const executeWithRetry = async () => {
+            try {
+                console.log(
+                    `Attempt ${retryCount + 1}/${
+                        maxRetries + 1
+                    }: Generating questions with:`,
+                    {
+                        quizTopic: quizData.quizTopic,
+                        quizBasis: quizData.quizBasis,
+                    }
+                );
 
-            if (!response.ok) {
-                throw new Error("Failed to generate quiz questions");
+                const response = await fetch("/api/generate-quiz", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        quizTopic: quizData.quizTopic,
+                        quizBasis: quizData.quizBasis,
+                    }),
+                });
+
+                // For 500 errors, retry if we haven't exceeded max retries
+                if (!response.ok && response.status === 500) {
+                    if (retryCount < maxRetries) {
+                        console.error(
+                            `Internal server error (500) on attempt ${
+                                retryCount + 1
+                            }/${maxRetries + 1}, retrying in ${retryDelay}ms`
+                        );
+                        retryCount++;
+
+                        // Wait before retrying
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, retryDelay)
+                        );
+
+                        // Increase delay for each retry (exponential backoff)
+                        return executeWithRetry();
+                    } else {
+                        // We've exhausted retries, throw error to be caught by outer catch
+                        throw new Error(
+                            `Server returned 500 error after ${
+                                maxRetries + 1
+                            } attempts`
+                        );
+                    }
+                }
+
+                // For other non-OK responses, throw immediately
+                if (!response.ok) {
+                    throw new Error(
+                        `Server returned ${response.status}: ${response.statusText}`
+                    );
+                }
+
+                const data = await response.json();
+                console.log("Generated questions:", data);
+                setQuizQuestions(data);
+                return data;
+            } catch (error) {
+                // If this is from a 500 retry exhaustion or any other error, rethrow
+                throw error;
             }
+        };
 
-            const data = await response.json();
-            console.log("Generated questions:", data);
-            setQuizQuestions(data);
+        try {
+            return await executeWithRetry();
         } catch (error) {
             console.error("Error generating quiz questions:", error);
             setValidationError(
                 "Failed to generate quiz questions. Please try again."
             );
+            return null;
         } finally {
             setIsLoading(false);
         }
